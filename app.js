@@ -15,10 +15,10 @@ app.use(cors({
     ]
 }));
 //Add slug api to routes
-api.use(function (req, res) {
+app.use('/api', api)
+app.use(function (req, res) {
     res.status(404).json({
         message: "URL doesn't exist (404)",
     });
 });
-app.use('/api', api)
 module.exports = app
