@@ -1,0 +1,15 @@
+{
+  "name": "condormarketbackend",
+  "version": "1.0.0",
+  "description": "Condor Market Backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "CondorLabs",
+    "CondorMarket"
+  ],
+  "author": "Hayder Espinoza B",
+  "license": "MIT"
+}
