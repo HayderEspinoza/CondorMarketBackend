@@ -1,4 +1,5 @@
 'use strict'
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const api = require('./app/routes')
@@ -13,10 +14,11 @@ app.use(cors({
         "http://localhost:5000",
     ]
 }));
-app.use('/api', api)
+//Add slug api to routes
 api.use(function (req, res) {
     res.status(404).json({
         message: "URL doesn't exist (404)",
     });
 });
+app.use('/api', api)
 module.exports = app
