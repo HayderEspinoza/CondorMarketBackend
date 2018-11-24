@@ -6,7 +6,7 @@ const helpers = require('../app/helpers');
 
 function isAuth(req, res, next) {
     if (!req.headers.authorization)
-        return helpers.notAuthorized()
+        return helpers.notAuthorized(res)
     const token = req.headers.authorization.split(' ')[1]
     UserService.decodeToken(token)
         .then(response => {
@@ -28,5 +28,5 @@ function isAdmin(req, res, next) {
 }
 
 module.exports = {
-    isAuth, isAdmin, isSuperAdmin
+    isAuth, isAdmin
 }

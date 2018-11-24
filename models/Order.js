@@ -13,7 +13,7 @@ const OrderSchema = new Schema({
     ],
 },
 { 
-    timestamps: { createdAt: 'created_at', updateAt: 'updated_at' }
+    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 })
 
 module.exports = mongosee.model('Order', OrderSchema)

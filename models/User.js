@@ -22,7 +22,7 @@ const UserSchema = new Schema({
     }
 },
 {
-    timestamps: { createdAt: 'created_at', updateAt: 'updated_at' }
+    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 })
 //Encrypt Password
 UserSchema.pre('save', function (next) {
