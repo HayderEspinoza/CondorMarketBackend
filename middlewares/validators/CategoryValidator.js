@@ -1,7 +1,6 @@
 'use strict'
 
 const { checkSchema } = require('express-validator/check');
-const User = require('../../models/User');
 
 const storeValidation = {
     name: {
@@ -14,4 +13,5 @@ const storeValidation = {
 
 module.exports = {
     store: checkSchema(storeValidation),
+    update: checkSchema(storeValidation),
 };

@@ -1,20 +1,20 @@
 'use strict'
 
-const Category = require('../models/Category')
+const Product = require('../models/Product')
 const { validationResult } = require('express-validator/check')
 const { messages } = require('../app/constants')
 
 function index(req, res) {
-    Category.find({}).then(categories => {
-        return res.status(200).send({ categories })
+    Product.find({}).then(products => {
+        return res.status(200).send({ products })
     }).catch(error => {
         return res.status(500).send({ msg: error })
-    })   
+    })
 }
 
 function show(req, res) {
-    Category.findById(req.params.id).then(category => {
-        return res.status(200).send(category._doc)
+    Product.findById(req.params.id).then(product => {
+        return res.status(200).send(product._doc)
     }).catch(error => {
         return res.status(500).send({ msg: messages.error.server, error })
     })
@@ -25,10 +25,10 @@ function store(req, res) {
     if (!errors.isEmpty())
         return res.status(409).send({ errors: errors.mapped() })
     else {
-        const category = new Category(req.body);
-        category.save((error, categoryStored) => {
+        const product = new Product(req.body);
+        product.save((error, productStored) => {
             if (error) return res.status(500).send({ message: messages.error.server, error })
-            return res.status(201).send({ message: messages.store, category: categoryStored })
+            return res.status(201).send({ message: messages.store, Product: productStored })
         })
     }
 }
@@ -38,8 +38,8 @@ function update(req, res) {
     if (!errors.isEmpty())
         return res.status(409).send({ errors: errors.mapped() })
     else {
-        Category.findByIdAndUpdate(req.params.id, res.body).then((category) => {
-            if (category) return res.status(200).send({ 'message': messages.update, category });
+        Product.findByIdAndUpdate(req.params.id, res.body).then((product) => {
+            if (product) return res.status(200).send({ 'message': messages.update, product });
             return res.status(404).send({ 'message': messages.error.notFound, error })
         }).catch(error => {
             return res.status(500).send({ 'message': messages.error.server, error })
@@ -48,7 +48,7 @@ function update(req, res) {
 }
 
 function remove(req, res) {
-    Category.findByIdAndRemove(req.params.id).then((result) => {
+    Product.findByIdAndRemove(req.params.id).then((result) => {
         if (result) return res.status(200).send({ 'message': messages.remove })
         return res.status(404).send({ 'message': messages.error.notFound, error })
     }).catch(error => {

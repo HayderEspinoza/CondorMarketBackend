@@ -1,20 +1,26 @@
 'use strict'
 
-const Category = require('../models/Category')
+const Order = require('../models/Order')
 const { validationResult } = require('express-validator/check')
 const { messages } = require('../app/constants')
 
 function index(req, res) {
-    Category.find({}).then(categories => {
-        return res.status(200).send({ categories })
+    Order.find({})
+    .populate('user')
+    .populate({ path: "products.product" })
+    .then(orders => {
+        return res.status(200).send({ orders })
     }).catch(error => {
         return res.status(500).send({ msg: error })
-    })   
+    })
 }
 
 function show(req, res) {
-    Category.findById(req.params.id).then(category => {
-        return res.status(200).send(category._doc)
+    Order.findById(req.params.id)
+    .populate('user')
+    .populate({ path: "products.product" })
+    .then(order => {
+        return res.status(200).send(order._doc)
     }).catch(error => {
         return res.status(500).send({ msg: messages.error.server, error })
     })
@@ -25,10 +31,10 @@ function store(req, res) {
     if (!errors.isEmpty())
         return res.status(409).send({ errors: errors.mapped() })
     else {
-        const category = new Category(req.body);
-        category.save((error, categoryStored) => {
+        const order = new Order(req.body);
+        order.save((error, orderStored) => {
             if (error) return res.status(500).send({ message: messages.error.server, error })
-            return res.status(201).send({ message: messages.store, category: categoryStored })
+            return res.status(201).send({ message: messages.store, order: orderStored })
         })
     }
 }
@@ -38,9 +44,12 @@ function update(req, res) {
     if (!errors.isEmpty())
         return res.status(409).send({ errors: errors.mapped() })
     else {
-        Category.findByIdAndUpdate(req.params.id, res.body).then((category) => {
-            if (category) return res.status(200).send({ 'message': messages.update, category });
-            return res.status(404).send({ 'message': messages.error.notFound, error })
+        Order.findById(req.params.id).then(storedOrder => {
+            storedOrder.products = req.body.products
+            storedOrder.save().then((updatedOrder) => {
+                if (updatedOrder) return res.status(200).send({ 'message': messages.update, order: updatedOrder });
+                return res.status(404).send({ 'message': messages.error.notFound, error })
+            })
         }).catch(error => {
             return res.status(500).send({ 'message': messages.error.server, error })
         })
@@ -48,7 +57,7 @@ function update(req, res) {
 }
 
 function remove(req, res) {
-    Category.findByIdAndRemove(req.params.id).then((result) => {
+    Order.findByIdAndRemove(req.params.id).then((result) => {
         if (result) return res.status(200).send({ 'message': messages.remove })
         return res.status(404).send({ 'message': messages.error.notFound, error })
     }).catch(error => {
