@@ -10,7 +10,7 @@ const storeValidation = {
             negated: true,
         },
     },
-    category_id: {
+    category: {
         isEmpty: {
             errorMessage: 'Field is required',
             negated: true,

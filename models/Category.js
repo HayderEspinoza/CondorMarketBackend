@@ -8,7 +8,14 @@ const CategorySchema = new Schema({
     description: { type: String, default: '', trim: true },
 },
 {
-    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
+    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+    toJSON: { virtuals: true }
 })
+
+CategorySchema.virtual('products', {
+    ref: 'Product',
+    localField: '_id',
+    foreignField: 'category'
+});
 
 module.exports = mongosee.model('Category', CategorySchema)
