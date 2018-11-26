@@ -1,15 +1,30 @@
 'use strict'
 
 const Product = require('../models/Product')
+const Category = require('../models/Category')
 const { validationResult } = require('express-validator/check')
 const { messages } = require('../app/constants')
 
 function index(req, res) {
-    Product.find({}).then(products => {
-        return res.status(200).send({ data: products })
-    }).catch(error => {
-        return res.status(500).send({ msg: error })
-    })
+    const { category, name } = req.query
+    let query = {}
+    //Filters
+    if(category){
+        if(Array.isArray(category))
+            query.category = { $in: category }
+        else
+            query.category = { $in: [category] }
+    }
+    if(name)
+        query.name = { '$regex': name, '$options': 'i' }
+    //End filters
+    Product.find(query)
+        .populate('category')
+        .then(products => {
+            return res.status(200).send({ data: products })
+        }).catch(error => {
+            return res.status(500).send({ msg: error })
+        })
 }
 
 function show(req, res) {
@@ -38,7 +53,7 @@ function update(req, res) {
     if (!errors.isEmpty())
         return res.status(409).send({ errors: errors.mapped() })
     else {
-        Product.findByIdAndUpdate(req.params.id, res.body).then((product) => {
+        Product.findByIdAndUpdate(req.params.id, req.body).then((product) => {
             if (product) return res.status(200).send({ 'message': messages.update, product });
             return res.status(404).send({ 'message': messages.error.notFound, error })
         }).catch(error => {

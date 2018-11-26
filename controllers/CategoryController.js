@@ -5,10 +5,8 @@ const { validationResult } = require('express-validator/check')
 const { messages } = require('../app/constants')
 
 function index(req, res) {
-    Category.find({})
-    .populate('products')
-    .then(categories => {
-        return res.status(200).send({ categories })
+    Category.find({}).then(categories => {
+        return res.status(200).send({ data: categories })
     }).catch(error => {
         return res.status(500).send({ msg: error })
     })   
