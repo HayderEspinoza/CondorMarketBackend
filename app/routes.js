@@ -29,20 +29,20 @@ api.get('/check-token', UserController.checkToken)
 
 //Categories routes
 api.get('/categories', CategoryController.index)
-api.post('/categories', [UserMiddleware.isAuth, UserMiddleware.isAdmin, CategoryValidator.store], CategoryController.store)
+api.post('/categories', [UserMiddleware.isAuth, CategoryValidator.store], CategoryController.store)
 api.get('/categories/:id', CategoryController.show)
-api.put('/categories/:id', [UserMiddleware.isAuth, UserMiddleware.isAdmin, CategoryValidator.update], CategoryController.update)
-api.delete('/categories/:id', [UserMiddleware.isAuth, UserMiddleware.isAdmin], CategoryController.remove)
+api.put('/categories/:id', [UserMiddleware.isAuth, CategoryValidator.update], CategoryController.update)
+api.delete('/categories/:id', [UserMiddleware.isAuth], CategoryController.remove)
 
 //Products routes
 api.get('/products', ProductController.index)
-api.post('/products', [UserMiddleware.isAuth, UserMiddleware.isAdmin, ProductValidator.store], ProductController.store)
+api.post('/products', [UserMiddleware.isAuth, ProductValidator.store], ProductController.store)
 api.get('/products/:id', ProductController.show)
-api.put('/products/:id', [UserMiddleware.isAuth, UserMiddleware.isAdmin, ProductValidator.update], ProductController.update)
-api.delete('/products/:id', [UserMiddleware.isAuth, UserMiddleware.isAdmin], ProductController.remove)
+api.put('/products/:id', [UserMiddleware.isAuth, ProductValidator.update], ProductController.update)
+api.delete('/products/:id', [UserMiddleware.isAuth], ProductController.remove)
 
 //Orders routes
-api.get('/orders', OrderController.index)
+api.get('/orders', [UserMiddleware.isAuth], OrderController.index)
 api.post('/orders', [UserMiddleware.isAuth, OrderValidator.store], OrderController.store)
 api.get('/orders/:id', OrderController.show)
 api.put('/orders/:id', [UserMiddleware.isAuth, OrderValidator.update], OrderController.update)

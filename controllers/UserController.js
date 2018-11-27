@@ -38,7 +38,8 @@ function login(req, res) {
                     return res.status(200).send({
                         message: `Welcome to ${config.APP_NAME}`,
                         token: UserService.createToken(user),
-                        role: user.role
+                        role: user.role,
+                        user: user._id
                     })
                 return res.status(403).send({
                     message: 'The password does not match',

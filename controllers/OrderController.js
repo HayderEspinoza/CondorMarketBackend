@@ -5,14 +5,14 @@ const { validationResult } = require('express-validator/check')
 const { messages } = require('../app/constants')
 
 function index(req, res) {
-    Order.find({})
-    .populate('user')
-    .populate({ path: "products.product" })
-    .then(orders => {
-        return res.status(200).send({ orders })
-    }).catch(error => {
-        return res.status(500).send({ msg: error })
-    })
+    Order.find({ user: { $eq: req.user }})
+        .populate('user')
+        .populate({ path: "products.product" })
+        .then(orders => {
+            return res.status(200).send({ data: orders })
+        }).catch(error => {
+            return res.status(500).send({ msg: error })
+        })
 }
 
 function show(req, res) {
