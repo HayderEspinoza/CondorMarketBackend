@@ -11,13 +11,7 @@ function register(req, res) {
     if (!errors.isEmpty())
         res.status(409).send({ errors: errors.mapped() })
     else {
-        const user = new User({
-            email: req.body.email,
-            name: req.body.name,
-            lastname: req.body.lastname,
-            password: req.body.password,
-            role: 'client',
-        });
+        const user = new User(req.body)
         user.save((error, userStored) => {
             if (error) res.status(500).send({ message: 'There was a problem creating the user', error: error })
             let token = UserService.createToken(user)
@@ -41,8 +35,8 @@ function login(req, res) {
                         role: user.role,
                         user: user._id
                     })
-                return res.status(403).send({
-                    message: 'The password does not match',
+                return res.status(409).send({
+                    errors: { password: { msg: 'The password does not match' } },
                 })
             });
         })

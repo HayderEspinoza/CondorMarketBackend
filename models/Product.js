@@ -2,6 +2,7 @@
 
 const mongosee = require('mongoose')
 const Schema = mongosee.Schema
+const config = require('../app/config')
 
 const ProductSchema = new Schema({
     name: { type: String, required: true, trim: true },
@@ -11,7 +12,14 @@ const ProductSchema = new Schema({
     price: { type: Number, default: 0 },
 }, 
 {
-    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
+    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+
 })
+
+ProductSchema.virtual('fullImage').get(function () {
+    return config.HOST + this.image;
+});
 
 module.exports = mongosee.model('Product', ProductSchema)

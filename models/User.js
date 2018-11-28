@@ -6,7 +6,6 @@ const bcrypt = require('bcrypt-nodejs')
 
 const UserSchema = new Schema({
     name: { type: String, trim: true },
-    lastname: { type: String, trim: true },
     email: {
         type: String,
         unique: true,
@@ -14,12 +13,6 @@ const UserSchema = new Schema({
         trim: true
     },
     password: { type: String, select: true },
-    role: {
-        type: String,
-        required: true,
-        enum: ['client', 'admin'],
-        trim: true
-    }
 },
 {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }

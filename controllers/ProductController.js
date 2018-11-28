@@ -4,6 +4,7 @@ const Product = require('../models/Product')
 const Category = require('../models/Category')
 const { validationResult } = require('express-validator/check')
 const { messages } = require('../app/constants')
+const config = require('../app/config')
 
 function index(req, res) {
     const { category, name } = req.query
@@ -28,23 +29,27 @@ function index(req, res) {
 }
 
 function show(req, res) {
-    Product.findById(req.params.id).then(product => {
-        return res.status(200).send(product._doc)
+    Product.findOne({ _id: req.params.id }).then(product => {
+        return res.status(200).send(product)
     }).catch(error => {
         return res.status(500).send({ msg: messages.error.server, error })
     })
 }
 
 function store(req, res) {
+    // console.log('req', req);
     const errors = validationResult(req)
     if (!errors.isEmpty())
         return res.status(409).send({ errors: errors.mapped() })
     else {
-        const product = new Product(req.body);
-        product.save((error, productStored) => {
-            if (error) return res.status(500).send({ message: messages.error.server, error })
-            return res.status(201).send({ message: messages.store, Product: productStored })
-        })
+        // return res.status(409).send({ 'test': req.file })
+        if(req.file){
+            const product = new Product({ ...req.body, image: `${config.UPLOADS}/${req.file.filename}`});
+            product.save((error, productStored) => {
+                if (error) return res.status(500).send({ message: messages.error.server, error })
+                return res.status(201).send({ message: messages.store, Product: productStored })
+            })
+        }
     }
 }
 

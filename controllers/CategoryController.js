@@ -38,7 +38,7 @@ function update(req, res) {
     if (!errors.isEmpty())
         return res.status(409).send({ errors: errors.mapped() })
     else {
-        Category.findByIdAndUpdate(req.params.id, res.body).then((category) => {
+        Category.findByIdAndUpdate(req.params.id, req.body).then((category) => {
             if (category) return res.status(200).send({ 'message': messages.update, category });
             return res.status(404).send({ 'message': messages.error.notFound, error })
         }).catch(error => {
